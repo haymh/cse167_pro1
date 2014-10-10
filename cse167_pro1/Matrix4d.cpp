@@ -1,5 +1,5 @@
 #include <math.h>
-
+#include <iostream>
 #include "Matrix4d.h"
 
 Matrix4d::Matrix4d()
@@ -84,6 +84,10 @@ Vector4d Matrix4d::operator* (const Vector4d& other){
 	return result;
 }
 
+void Matrix4d::multiply(const Matrix4d& other){
+	*this = *this * other;
+}
+
 void Matrix4d::makeRotateX(double angle){
 	angle = angle / 180.0 * M_PI;
 	identity();
@@ -126,4 +130,13 @@ void Matrix4d::makeTranslate(double tx, double ty, double tz){
 	m[3][0] = tx;
 	m[3][1] = ty;
 	m[3][2] = tz;
+}
+
+void Matrix4d::print(std::string comment){
+	std::cout << comment << std::endl;
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++)
+			std::cout << m[j][i] << " ";
+		std::cout << std::endl;
+	}
 }

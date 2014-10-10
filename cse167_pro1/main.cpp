@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
   glutDisplayFunc(Window::displayCallback);
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
+  glutKeyboardFunc(Window::keyboardProcess);
     
   // Initialize cube matrix:
   Globals::cube.getMatrix().identity();

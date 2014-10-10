@@ -21,6 +21,7 @@ public:
 	void negate();
 	void scale(GLdouble s);
 	GLdouble dot(Vector3d & another);
+	static GLdouble dot(Vector3d &, Vector3d &);
 	Vector3d cross(Vector3d & another);
 	GLdouble magnitude();
 	void normalize();

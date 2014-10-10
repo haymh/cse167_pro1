@@ -17,6 +17,7 @@ class Matrix4d
     Matrix4d& operator=(const Matrix4d&);
 	Matrix4d operator* (const Matrix4d&);
 	Vector4d operator* (const Vector4d&);
+	void multiply(const Matrix4d&);
 	void makeRotateY(double angle);
 	void makeRotateX(double angle);
 	void makeRotateZ(double angle);

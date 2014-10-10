@@ -11,12 +11,13 @@ using namespace std;
 
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
+double Window::spin_deg = 0.01;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
 {
-  Globals::cube.spin(0.01);   // rotate cube; if it spins too fast try smaller values and vice versa
+  Globals::cube.spin(spin_deg);   // rotate cube; if it spins too fast try smaller values and vice versa
   displayCallback();         // call display routine to show the cube
 }
 
@@ -97,4 +98,42 @@ void Window::displayCallback()
   
   glFlush();  
   glutSwapBuffers();
+}
+
+void Window::keyboardProcess(unsigned char key, int x, int y){
+	switch (key){
+	case 't': //switch spin direction between counterclockwise and clockwise
+		spin_deg = -spin_deg;
+		break;
+	case 'x': //move left
+		Globals::cube.translate(control::LEFT);
+		break;
+	case 'X': //move right
+		Globals::cube.translate(control::RIGHT);
+		break;
+	case 'y': //move down
+		Globals::cube.translate(control::DOWN);
+		break;
+	case 'Y': //move up
+		Globals::cube.translate(control::UP);
+		break;
+	case 'z': //move in
+		Globals::cube.translate(control::IN);
+		break;
+	case 'Z': //move out
+		Globals::cube.translate(control::OUT);
+		break;
+	case 'r': //reset
+		break;
+	case 'o': //orbit about window z axis counterclockwise
+		break;
+	case 'O': //orbit about window z axis clockwise
+		break;
+	case 's': //scale down
+		break;
+	case 'S': //scale up
+		break;
+	case 27:
+		exit(0);
+	}
 }

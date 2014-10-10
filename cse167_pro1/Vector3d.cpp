@@ -61,6 +61,10 @@ GLdouble Vector3d::dot(Vector3d & another){
 	return sum;
 }
 
+GLdouble Vector3d::dot(Vector3d & one, Vector3d & two){
+	return one[0] * two[0] + one[1] * two[1] + one[2] * two[2];
+}
+
 Vector3d Vector3d::cross(Vector3d & another){
 	GLdouble x = v[1] * another[2] - v[2] * another[1];
 	GLdouble y = v[0] * another[2] - v[2] * another[0];
