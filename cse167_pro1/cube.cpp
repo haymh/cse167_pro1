@@ -23,7 +23,7 @@ void Cube::spin(double deg)   // deg is in degrees
   angle += deg;
   if (angle > 360.0 || angle < -360.0) angle = 0.0;
   spin_matrix.makeRotateY(angle);   // This creates the matrix to rotate the cube
-  model2world = translation * scaling * rotation * spin_matrix * inv_translation;
+  model2world = translation * rotation * spin_matrix * scaling;
 }
 
 void Cube::translate(control::DIRECTION d){
@@ -65,7 +65,7 @@ void Cube::translate(control::DIRECTION d){
 		inv_translation.multiply(temp);
 		break;
 	}
-	model2world = translation * scaling * rotation * spin_matrix * inv_translation;
+	model2world = translation * rotation * spin_matrix * scaling;
 }
 
 void Cube::rotateX(control::DIRECTION d){
