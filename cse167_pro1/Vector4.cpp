@@ -45,6 +45,17 @@ Vector4d Vector4d::operator+(Vector4d & another){
 	return Vector4d(x, y, z, w);
 }
 
+Vector4d& Vector4d::operator=(Vector4d & other){
+	if (this != &other)
+	{
+		for (int i = 0; i<4; ++i)
+		{
+			v[i] = other[i];
+		}
+	}
+	return *this;
+}
+
 void Vector4d::add(Vector4d & another){
 	GLdouble x = another[0] / another[3];
 	GLdouble y = another[1] / another[3];

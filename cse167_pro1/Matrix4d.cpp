@@ -71,15 +71,15 @@ Matrix4d Matrix4d::operator* (const Matrix4d& other){
 	Matrix4d result;
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++){
-			result.m[j][i] = m[j][0] * other.m[0][i] + m[j][1] * other.m[1][i] + m[j][2] * other.m[2][i] + m[j][3] * other.m[3][i];
+		result.m[i][j] = m[0][j] * other.m[i][0] + m[1][j] * other.m[i][1] + m[2][j] * other.m[i][2] + m[3][j] * other.m[i][3];
 		}
 	return result;
 }
 
-Vector4d Matrix4d::operator* (const Vector4d& other){
+Vector4d Matrix4d::operator* (Vector4d& other){
 	Vector4d result;
 	for (int i = 0; i < 4; i++){
-		result.set(i, result[0] * m[i][0] + result[1] * m[i][1] + result[2] * m[i][2] + result[3] * m[i][3]);
+		result.set(i, other[0] * m[0][i] + other[1] * m[1][i] + other[2] * m[2][i] + other[3] * m[3][i]);
 	}
 	return result;
 }

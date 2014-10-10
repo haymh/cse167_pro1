@@ -14,6 +14,7 @@ public:
 	Vector4d(GLdouble, GLdouble, GLdouble, GLdouble);
 	void set(int index, GLdouble value);
 	GLdouble get(int index);
+	Vector4d& operator=(Vector4d&);
 	GLdouble operator[](int index);
 	Vector4d operator+(Vector4d & another);
 	void add(Vector4d & another);

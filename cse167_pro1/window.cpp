@@ -11,13 +11,13 @@ using namespace std;
 
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
-double Window::spin_deg = 0.01;
+Vector4d Window::centerOfCube = Vector4d(0, 0, 0, 1);
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
 {
-  Globals::cube.spin(spin_deg);   // rotate cube; if it spins too fast try smaller values and vice versa
+  Globals::cube.spin();   // rotate cube; if it spins too fast try smaller values and vice versa
   displayCallback();         // call display routine to show the cube
 }
 
@@ -103,35 +103,52 @@ void Window::displayCallback()
 void Window::keyboardProcess(unsigned char key, int x, int y){
 	switch (key){
 	case 't': //switch spin direction between counterclockwise and clockwise
-		spin_deg = -spin_deg;
+		Globals::cube.toggle();
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'x': //move left
 		Globals::cube.translate(control::LEFT);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'X': //move right
 		Globals::cube.translate(control::RIGHT);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'y': //move down
 		Globals::cube.translate(control::DOWN);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'Y': //move up
 		Globals::cube.translate(control::UP);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'z': //move in
 		Globals::cube.translate(control::IN);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'Z': //move out
 		Globals::cube.translate(control::OUT);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'r': //reset
+		Globals::cube.reset();
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'o': //orbit about window z axis counterclockwise
+		Globals::cube.orbitZ(control::COUNTER_CLOCKWISE);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'O': //orbit about window z axis clockwise
+		Globals::cube.orbitZ(control::CLOCKWISE);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 's': //scale down
+		Globals::cube.scale(control::DOWN);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 'S': //scale up
+		Globals::cube.scale(control::UP);
+		Globals::cube.printPosition(centerOfCube);
 		break;
 	case 27:
 		exit(0);
