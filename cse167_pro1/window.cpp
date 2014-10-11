@@ -11,7 +11,10 @@ using namespace std;
 
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
+int Window::old_x = width / 2;
+int Window::old_y = height / 2;
 Vector4d Window::centerOfCube = Vector4d(0, 0, 0, 1);
+bool Window::isCube = true;
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -42,62 +45,79 @@ void Window::displayCallback()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
+  if (isCube)
+	  drawCube();
+  else
+	  drawBall();
+  
+}
 
-  // Tell OpenGL what ModelView matrix to use:
-  Matrix4d glmatrix;
-  glmatrix = Globals::cube.getMatrix();
-  //glmatrix.transpose(); // changed the matrix4d to column major, so dont need to call transpose
-  glLoadMatrixd(glmatrix.getPointer());
+void Window::drawCube(){
+	// Tell OpenGL what ModelView matrix to use:
+	Matrix4d glmatrix;
+	glmatrix = Globals::cube.getMatrix();
+	//glmatrix.transpose(); // changed the matrix4d to column major, so dont need to call transpose
+	glLoadMatrixd(glmatrix.getPointer());
 
-  // Draw all six faces of the cube:
-  glBegin(GL_QUADS);
-    glColor3f(0.0, 1.0, 0.0);		// This makes the cube green; the parameters are for red, green and blue. 
-                                // To change the color of the other faces you will need to repeat this call before each face is drawn.
-    // Draw front face:
-    glNormal3f(0.0, 0.0, 1.0);   
-    glVertex3f(-5.0,  5.0,  5.0);
-    glVertex3f( 5.0,  5.0,  5.0);
-    glVertex3f( 5.0, -5.0,  5.0);
-    glVertex3f(-5.0, -5.0,  5.0);
-    
-    // Draw left side:
-    glNormal3f(-1.0, 0.0, 0.0);
-    glVertex3f(-5.0,  5.0,  5.0);
-    glVertex3f(-5.0,  5.0, -5.0);
-    glVertex3f(-5.0, -5.0, -5.0);
-    glVertex3f(-5.0, -5.0,  5.0);
-    
-    // Draw right side:
-    glNormal3f(1.0, 0.0, 0.0);
-    glVertex3f( 5.0,  5.0,  5.0);
-    glVertex3f( 5.0,  5.0, -5.0);
-    glVertex3f( 5.0, -5.0, -5.0);
-    glVertex3f( 5.0, -5.0,  5.0);
-  
-    // Draw back face:
-    glNormal3f(0.0, 0.0, -1.0);
-    glVertex3f(-5.0,  5.0, -5.0);
-    glVertex3f( 5.0,  5.0, -5.0);
-    glVertex3f( 5.0, -5.0, -5.0);
-    glVertex3f(-5.0, -5.0, -5.0);
-  
-    // Draw top side:
-    glNormal3f(0.0, 1.0, 0.0);
-    glVertex3f(-5.0,  5.0,  5.0);
-    glVertex3f( 5.0,  5.0,  5.0);
-    glVertex3f( 5.0,  5.0, -5.0);
-    glVertex3f(-5.0,  5.0, -5.0);
-  
-    // Draw bottom side:
-    glNormal3f(0.0, -1.0, 0.0);
-    glVertex3f(-5.0, -5.0, -5.0);
-    glVertex3f( 5.0, -5.0, -5.0);
-    glVertex3f( 5.0, -5.0,  5.0);
-    glVertex3f(-5.0, -5.0,  5.0);
-  glEnd();
-  
-  glFlush();  
-  glutSwapBuffers();
+	// Draw all six faces of the cube:
+	glBegin(GL_QUADS);
+	glColor3f(0.0, 1.0, 0.0);		// This makes the cube green; the parameters are for red, green and blue. 
+	// To change the color of the other faces you will need to repeat this call before each face is drawn.
+	// Draw front face:
+	glNormal3f(0.0, 0.0, 1.0);
+	glVertex3f(-5.0, 5.0, 5.0);
+	glVertex3f(5.0, 5.0, 5.0);
+	glVertex3f(5.0, -5.0, 5.0);
+	glVertex3f(-5.0, -5.0, 5.0);
+
+	// Draw left side:
+	glNormal3f(-1.0, 0.0, 0.0);
+	glVertex3f(-5.0, 5.0, 5.0);
+	glVertex3f(-5.0, 5.0, -5.0);
+	glVertex3f(-5.0, -5.0, -5.0);
+	glVertex3f(-5.0, -5.0, 5.0);
+
+	// Draw right side:
+	glNormal3f(1.0, 0.0, 0.0);
+	glVertex3f(5.0, 5.0, 5.0);
+	glVertex3f(5.0, 5.0, -5.0);
+	glVertex3f(5.0, -5.0, -5.0);
+	glVertex3f(5.0, -5.0, 5.0);
+
+	// Draw back face:
+	glNormal3f(0.0, 0.0, -1.0);
+	glVertex3f(-5.0, 5.0, -5.0);
+	glVertex3f(5.0, 5.0, -5.0);
+	glVertex3f(5.0, -5.0, -5.0);
+	glVertex3f(-5.0, -5.0, -5.0);
+
+	// Draw top side:
+	glNormal3f(0.0, 1.0, 0.0);
+	glVertex3f(-5.0, 5.0, 5.0);
+	glVertex3f(5.0, 5.0, 5.0);
+	glVertex3f(5.0, 5.0, -5.0);
+	glVertex3f(-5.0, 5.0, -5.0);
+
+	// Draw bottom side:
+	glNormal3f(0.0, -1.0, 0.0);
+	glVertex3f(-5.0, -5.0, -5.0);
+	glVertex3f(5.0, -5.0, -5.0);
+	glVertex3f(5.0, -5.0, 5.0);
+	glVertex3f(-5.0, -5.0, 5.0);
+	glEnd();
+
+	glFlush();
+	glutSwapBuffers();
+}
+
+void Window::drawBall(){
+	Matrix4d glmatrix;
+	glmatrix.identity();
+	glLoadMatrixd(glmatrix.getPointer());
+	glColor3f(0.0, 1.0, 0.0);
+	glutSolidSphere(3, 20, 20);
+	glFlush();
+	glutSwapBuffers();
 }
 
 void Window::keyboardProcess(unsigned char key, int x, int y){
@@ -150,7 +170,18 @@ void Window::keyboardProcess(unsigned char key, int x, int y){
 		Globals::cube.scale(control::UP);
 		Globals::cube.printPosition(centerOfCube);
 		break;
+	case 'b': //switch between ball and cube
+		isCube = !isCube;
+		break;
 	case 27:
 		exit(0);
 	}
+}
+
+void Window::mouseMotionProcess(int x, int y){
+	int dx = x - old_x;
+	int dy = y - old_y;
+	old_x = x;
+	old_y = y;
+	cout << "( " << old_x << ", " << old_y << " )" << "dx: " << dx << " dy: " << dy << endl;
 }
