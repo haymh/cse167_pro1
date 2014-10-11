@@ -12,6 +12,7 @@ using namespace std;
 namespace Globals
 {
   Cube cube;
+  BouncingBall ball;
 };
 
 int main(int argc, char *argv[])
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
   glutIdleFunc(Window::idleCallback);
   glutKeyboardFunc(Window::keyboardProcess);
   glutPassiveMotionFunc(Window::mouseMotionProcess);
+  glutMouseFunc(Window::mouseProcess);
     
   // Initialize cube matrix:
   Globals::cube.getMatrix().identity();

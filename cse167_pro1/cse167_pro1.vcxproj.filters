@@ -25,6 +25,9 @@
     <ClCompile Include="Vector3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bouncingBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cube.h">
@@ -43,6 +46,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrix4d.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bouncingBall.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

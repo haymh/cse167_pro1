@@ -19,6 +19,7 @@ class Window	  // OpenGL output window related routines
 	static void drawCube();
 	static void drawBall();
 	static void mouseMotionProcess(int, int);
+	static void mouseProcess(int, int, int, int);
 };
 
 #endif

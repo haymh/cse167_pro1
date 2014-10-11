@@ -112,7 +112,9 @@ void Window::drawCube(){
 
 void Window::drawBall(){
 	Matrix4d glmatrix;
-	glmatrix.identity();
+	glmatrix = Globals::ball.getMatrix();
+	if (Globals::ball.isReady())
+		Globals::ball.move();
 	glLoadMatrixd(glmatrix.getPointer());
 	glColor3f(0.0, 1.0, 0.0);
 	glutSolidSphere(3, 20, 20);
@@ -179,9 +181,22 @@ void Window::keyboardProcess(unsigned char key, int x, int y){
 }
 
 void Window::mouseMotionProcess(int x, int y){
-	int dx = x - old_x;
-	int dy = y - old_y;
+	double dx = x - old_x;
+	double dy = old_y - y;
 	old_x = x;
 	old_y = y;
-	cout << "( " << old_x << ", " << old_y << " )" << "dx: " << dx << " dy: " << dy << endl;
+	if (!isCube && !Globals::ball.isReady()){
+		Globals::ball.translate(dx / width * 20, dy / height * 20, 0);
+	}
+}
+
+void Window::mouseProcess(int button, int state, int x, int y){
+	if (!isCube){
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_UP){
+			Globals::ball.drop();
+		}
+		if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP){
+			Globals::ball.reset();
+		}
+	}
 }
