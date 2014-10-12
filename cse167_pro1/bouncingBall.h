@@ -9,9 +9,11 @@ protected:
 	double acceleration;				// how fast the speed increase or decrease
 	double x_speed;						// speed along x direction
 	double y_speed;						// speed along y direction
+	double z_speed;
 	int floor;							// position of the floor
-	double deceleration;				// the force reduces accerlation
-	double x_deceleration;
+	double deceleration;				// deceleration in y direction
+	double x_deceleration;				// deceleration in x direction
+	double z_deceleration;				// deceleration in z direction
 	Vector4d center;					// center of the ball
 	double radius;						// radius of the ball
 	bool down;							// true -- the ball is going down, false it is going up
@@ -21,10 +23,12 @@ protected:
 	bool ready;
 	bool x_stopped;
 	bool y_stopped;
+	bool z_stopped;
 
 public:
 	BouncingBall();
-	BouncingBall(double acc, double xs, double ys, int fl, double dec, Vector4d ce, double ra, double spc);
+	BouncingBall(double acc, double xs, double ys, double zs, int fl, double dec, Vector4d ce, double ra, double spc);
+	void randomSpeed();
 	bool isReady();
 	void reset();
 	void drop();

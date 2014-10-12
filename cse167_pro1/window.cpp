@@ -117,7 +117,7 @@ void Window::drawBall(){
 		Globals::ball.move();
 	glLoadMatrixd(glmatrix.getPointer());
 	glColor3f(0.0, 1.0, 0.0);
-	glutSolidSphere(3, 20, 20);
+	glutSolidSphere(3, 100, 100);
 	glFlush();
 	glutSwapBuffers();
 }
@@ -193,9 +193,11 @@ void Window::mouseMotionProcess(int x, int y){
 void Window::mouseProcess(int button, int state, int x, int y){
 	if (!isCube){
 		if (button == GLUT_LEFT_BUTTON && state == GLUT_UP){
+			Globals::ball.randomSpeed();
 			Globals::ball.drop();
 		}
 		if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP){
+			
 			Globals::ball.reset();
 		}
 	}
