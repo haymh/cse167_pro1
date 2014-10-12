@@ -21,7 +21,7 @@ class Matrix4d
 	void makeRotateY(double angle);
 	void makeRotateX(double angle);
 	void makeRotateZ(double angle);
-	void makeRotate(double angle, const Vector3d & axis);
+	void makeRotate(double angle, Vector3d & axis);
 	void makeScale(double sx, double sy, double sz);
 	void makeTranslate(double tx, double ty, double tz);
     double* getPointer(); 
