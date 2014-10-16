@@ -12,7 +12,7 @@ BouncingBall::BouncingBall(){
 	z_deceleration = x_deceleration;
 	center = Vector4d(0, 0, 0, 1);
 	radius = 3;
-	sec_per_call = 0.01;
+	sec_per_call = 0.01; 
 	bounce_loss = 0.8;
 	down = true;
 	ready = false;
