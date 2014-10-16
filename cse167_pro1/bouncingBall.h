@@ -18,6 +18,7 @@ protected:
 	double radius;						// radius of the ball
 	bool down;							// true -- the ball is going down, false it is going up
 	double sec_per_call;				// second per function call
+	double bounce_loss;					// energy loss when bouncing
 	Matrix4d translation;				// the matrix tracking ball's movement
 	Matrix4d temp;
 	bool ready;
@@ -27,7 +28,7 @@ protected:
 
 public:
 	BouncingBall();
-	BouncingBall(double acc, double xs, double ys, double zs, int fl, double dec, Vector4d ce, double ra, double spc);
+	BouncingBall(double acc, double xs, double ys, double zs, int fl, double dec, Vector4d ce, double ra, double spc, double bl);
 	void randomSpeed();
 	bool isReady();
 	void reset();
