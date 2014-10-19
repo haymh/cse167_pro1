@@ -67,7 +67,7 @@ GLdouble Vector3d::dot(Vector3d & one, Vector3d & two){
 
 Vector3d Vector3d::cross(Vector3d & another){
 	GLdouble x = v[1] * another[2] - v[2] * another[1];
-	GLdouble y = v[0] * another[2] - v[2] * another[0];
+	GLdouble y = v[2] * another[0] - v[0] * another[2];
 	GLdouble z = v[0] * another[1] - v[1] * another[0];
 	return Vector3d(x, y, z);
 }
@@ -82,6 +82,6 @@ void Vector3d::normalize(){
 		v[i] /= m;
 }
 
-void Vector3d::print(){
-	std::cout << v[0] << " " << v[1] << " " << v[2] << std::endl;
+void Vector3d::print(char* msg){
+	std::cout << msg << v[0] << " " << v[1] << " " << v[2] << std::endl;
 }

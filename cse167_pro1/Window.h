@@ -2,6 +2,7 @@
 #define _WINDOW_H_
 
 #include "Vector4d.h"
+#include "Camera.h"
 
 class Window	  // OpenGL output window related routines
 {
@@ -16,8 +17,10 @@ class Window	  // OpenGL output window related routines
     static void reshapeCallback(int, int);
     static void displayCallback(void);
 	static void keyboardProcess(unsigned char key, int x, int y);
+	static void processSpecialKeys(int k, int x, int y);
 	static void drawCube();
 	static void drawBall();
+	static void drawHouse(Camera&);
 	static void mouseMotionProcess(int, int);
 	static void mouseProcess(int, int, int, int);
 };

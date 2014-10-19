@@ -24,6 +24,7 @@ class Matrix4d
 	void makeRotate(double angle, Vector3d & axis);
 	void makeScale(double sx, double sy, double sz);
 	void makeTranslate(double tx, double ty, double tz);
+	void set(int, int, double);
     double* getPointer(); 
     void identity(); 
     void transpose();

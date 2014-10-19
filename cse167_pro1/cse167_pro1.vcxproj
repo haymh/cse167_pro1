@@ -79,16 +79,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="bouncingBall.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix4d.cpp" />
     <ClCompile Include="Vector3d.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="bouncingBall.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="World.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Matrix4d.h" />

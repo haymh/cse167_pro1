@@ -25,7 +25,7 @@ public:
 	Vector3d cross(Vector3d & another);
 	GLdouble magnitude();
 	void normalize();
-	void print();
+	void print(char*);
 
 };
 

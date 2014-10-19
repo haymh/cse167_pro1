@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
   glutKeyboardFunc(Window::keyboardProcess);
+  glutSpecialFunc(Window::processSpecialKeys);
   glutPassiveMotionFunc(Window::mouseMotionProcess);
   glutMouseFunc(Window::mouseProcess);
     

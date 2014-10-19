@@ -165,3 +165,7 @@ void Matrix4d::print(std::string comment){
 		std::cout << std::endl;
 	}
 }
+
+void Matrix4d::set(int x, int y, double e){
+	m[x][y] = e;
+}
