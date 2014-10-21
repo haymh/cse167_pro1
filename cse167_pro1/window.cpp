@@ -8,6 +8,7 @@
 #include "Ball.h"
 #include "World.h"
 #include "Camera.h"
+#include "parser.h"
 #include <vector>
 
 using namespace std;
@@ -27,6 +28,17 @@ World w(-3);
 
 Camera cam1(Vector3d(0, 10, 10), Vector3d(0, 0, 0), Vector3d(0, 1, 0));
 Camera cam2(Vector3d(-15, 5, 10), Vector3d(-5, 0, 0), Vector3d(0, 1, 0.5));
+
+vector<double> bunnyPos;
+vector<double> dragonPos;
+bool bunnyLoaded = false;
+double bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax;
+vector<Vector3d> bunnyNor;
+vector<Vector3d> dragonNor;
+bool dragonLoaded = false;
+Vector3d scaleV(1, 1, 1);
+
+
 
 // This data structure defines a simple house
 
@@ -78,6 +90,13 @@ int indices[] = {
 	35, 37, 38, 35, 36, 37,   // right slope
 	39, 40, 41 };            // rear attic wall
 
+void Window::loadFiles(){
+	Parser::parse("bunny.xyz", bunnyPos, bunnyNor, bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax);
+	bunnyLoaded = true;
+	Parser::parse("dragon.xyz", dragonPos, dragonNor, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax);
+	dragonLoaded = true;
+}
+
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
@@ -119,6 +138,13 @@ void Window::displayCallback()
 	  break;
   case F3:
 	  drawHouse(cam2);
+	  break;
+  case F4:
+	  drawPointCloud(bunnyPos, bunnyNor, bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax);
+	  break;
+  case F5:
+	  drawPointCloud(dragonPos, dragonNor, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax);
+	  break;
   }
   
   
@@ -227,6 +253,44 @@ void Window::drawBall(){
 	glutSwapBuffers();
 }
 
+void Window::drawPointCloud(vector<double> &position, vector<Vector3d> &normal, double &x_min, double &x_max, double &y_min, double &y_max, double &z_min, double &z_max){
+	glEnable(GL_LIGHTING);
+	glMatrixMode(GL_MODELVIEW);
+	Matrix4d glmatrix;
+	Matrix4d scaling;
+	Matrix4d translation;
+	
+	double x = x_max - x_min;
+	double y = y_max - y_min;
+	double z = z_max - z_min;
+	double max = x > y ? (x > z ? x : z) : (y > z ? y : z);
+	max /= 1.7;
+	double r_max = 20 * sin(30 * M_PI / 180);
+	double s = r_max / max;
+	scaling.makeScale(s, s, s);
+	translation.makeTranslate(-(x_min + x_max) / 2, -(y_min + y_max) / 2, -(z_min + z_max) / 2);
+	glmatrix = scaling * translation;
+	glLoadMatrixd(glmatrix.getPointer());
+	glBegin(GL_POINTS);
+	for (int i = 0; i < normal.size(); i++)
+	{
+		glNormal3d(normal[i][0], normal[i][1], normal[i][2]);
+		glVertex3d(position[i*3], position[i*3+1], position[i*3+2]);
+	}
+	glEnd();
+
+	/* testing the method
+	double r_max = 20 * sin(30 * M_PI / 180);
+	double s = r_max / 3;
+	glmatrix.makeScale(s, s, s);
+	glLoadMatrixd(glmatrix.getPointer());
+	glColor3f(0, 1, 0);
+	glutSolidSphere(3, 100, 100);
+	*/
+	glFlush();
+	glutSwapBuffers();
+}
+
 void Window::keyboardProcess(unsigned char key, int x, int y){
 	switch (key){
 	case 't': //switch spin direction between counterclockwise and clockwise
@@ -272,10 +336,12 @@ void Window::keyboardProcess(unsigned char key, int x, int y){
 	case 's': //scale down
 		Globals::cube.scale(control::DOWN);
 		Globals::cube.printPosition(centerOfCube);
+		scaleV.scale(0.5);
 		break;
 	case 'S': //scale up
 		Globals::cube.scale(control::UP);
 		Globals::cube.printPosition(centerOfCube);
+		scaleV.scale(2);
 		break;
 	case 'b': //switch between ball and cube
 		isCube = !isCube;
@@ -295,6 +361,12 @@ void Window::processSpecialKeys(int k, int x, int y){
 		break;
 	case GLUT_KEY_F3:
 		key = F3;
+		break;
+	case GLUT_KEY_F4:
+		key = F4;
+		break;
+	case GLUT_KEY_F5:
+		key = F5;
 		break;
 	}
 }
@@ -323,7 +395,7 @@ void Window::mouseProcess(int button, int state, int x, int y){
 			
 			//Globals::ball.reset();
 			Ball * b = new Ball();
-			b->setCenter(Vector3d(0, 5, 0));
+			b->setCenter(Vector3d(0, 50, 0));
 			b->setRadius(3);
 			b->randomColor();
 			w.addBall(b);

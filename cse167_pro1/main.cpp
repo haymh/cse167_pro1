@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
   glutSpecialFunc(Window::processSpecialKeys);
   glutPassiveMotionFunc(Window::mouseMotionProcess);
   glutMouseFunc(Window::mouseProcess);
+  Window::loadFiles();
     
   // Initialize cube matrix:
   Globals::cube.getMatrix().identity();

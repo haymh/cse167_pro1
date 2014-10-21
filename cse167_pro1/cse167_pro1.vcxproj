@@ -85,6 +85,7 @@
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix4d.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="Vector3d.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="window.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="bouncingBall.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="parser.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="main.h" />
