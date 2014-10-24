@@ -26,6 +26,7 @@ class Window	  // OpenGL output window related routines
 	static void mouseMotionProcess(int, int);
 	static void mouseProcess(int, int, int, int);
 	static void loadFiles();
+
 };
 
 #endif

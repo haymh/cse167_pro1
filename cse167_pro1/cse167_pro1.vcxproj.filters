@@ -66,13 +66,13 @@
     <ClInclude Include="Ball.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="parser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

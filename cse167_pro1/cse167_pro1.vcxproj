@@ -96,13 +96,13 @@
     <ClInclude Include="bouncingBall.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="parser.h" />
-    <ClInclude Include="World.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Matrix4d.h" />
     <ClInclude Include="Vector3d.h" />
     <ClInclude Include="Vector4d.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
