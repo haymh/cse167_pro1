@@ -15,7 +15,6 @@ void Parser::parse(char* file, vector<double> &position, vector<Vector3d> &norma
 	}
 	else
 		std::cout << "file has been opened" << std::endl;
-	std::cout << "start parsing..." << std::endl;
 
 	string line;
 	x_min = y_min = z_min = std::numeric_limits<double>::max();
@@ -53,8 +52,5 @@ void Parser::parse(char* file, vector<double> &position, vector<Vector3d> &norma
 		n.normalize();
 		normal.push_back(n);
 	}
-	std::cout << "parsing completed." << std::endl;
 	std::cout << "x min: " << x_min << "x max: " << x_max << "y min: " << y_min << "y max: " << y_max << "z min: " << z_min << "z max: " << z_max << std::endl;
-	std::cout << "center at: " << (x_max + x_min) / 2 << ", " << (y_max + y_min) / 2 << ", " << (z_max + z_min) / 2 << std::endl;
-	std::cout << "x length: " << (x_max - x_min) / 2 << ", y length: " << (y_max - y_min) / 2 << ", z length: " << (z_max - z_min) / 2;
 }

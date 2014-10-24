@@ -29,14 +29,22 @@ World w(-3);
 Camera cam1(Vector3d(0, 10, 10), Vector3d(0, 0, 0), Vector3d(0, 1, 0));
 Camera cam2(Vector3d(-15, 5, 10), Vector3d(-5, 0, 0), Vector3d(0, 1, 0.5));
 
+//Camera cam1(0, 10, 10, 0, 0, 0, 0, 1, 0);
+//Camera cam2(-15, 5, 10, -5, 0, 0, 0, 1, 0.5);
+
 vector<double> bunnyPos;
 vector<double> dragonPos;
+Matrix4d tran_bunny;
+Matrix4d tran_dragon;
+Matrix4d scale_bunny;
+Matrix4d scale_dragon;
 bool bunnyLoaded = false;
 double bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax;
 vector<Vector3d> bunnyNor;
 vector<Vector3d> dragonNor;
 bool dragonLoaded = false;
 Vector3d scaleV(1, 1, 1);
+double particle_size = 0.005;
 
 
 
@@ -91,10 +99,18 @@ int indices[] = {
 	39, 40, 41 };            // rear attic wall
 
 void Window::loadFiles(){
+	cout << "start parsing bunny..." << endl;
 	Parser::parse("bunny.xyz", bunnyPos, bunnyNor, bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax);
 	bunnyLoaded = true;
+	tran_bunny.makeTranslate(-(bunny_xmin + bunny_xmax) / 2, -(bunny_ymin + bunny_ymax) / 2, -(bunny_zmin + bunny_zmax) / 2);
+	tran_bunny.print("translation matrix for bunny:");
+	cout << "bunny is loaded." << endl;
+	cout << "start parsing dragon..." << endl;
 	Parser::parse("dragon.xyz", dragonPos, dragonNor, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax);
 	dragonLoaded = true;
+	tran_dragon.makeTranslate(-(dragon_xmin + dragon_xmax) / 2, -(dragon_ymin + dragon_ymax) / 2, -(dragon_zmin + dragon_zmax) / 2);
+	tran_dragon.print("translation matrix for dragon:");
+	cout << "dragon is loaded." << endl;
 }
 
 //----------------------------------------------------------------------------
@@ -118,6 +134,35 @@ void Window::reshapeCallback(int w, int h)
   gluPerspective(60.0, double(width)/(double)height, 1.0, 1000.0); // set perspective projection viewing frustum
   glTranslatef(0, 0, -20);    // move camera back 20 units so that it looks at the origin (or else it's in the origin)
   glMatrixMode(GL_MODELVIEW);
+  // calculate scaling matrix for bunny
+  double x = (bunny_xmax - bunny_xmin) / 2;
+  double y = (bunny_ymax - bunny_ymin) / 2;
+  double z = (bunny_zmax - bunny_zmin) / 2;
+
+  double a = z / y;
+  double ymax = 20 / (a + 1 / tan(30 * M_PI / 180));
+  double sy = ymax / y;					// scaling factor according to y
+
+  double xmax = ymax * (double)w / (double)h; //scaling factor according to x
+  double sx = xmax / x;
+
+  double min = sy < sx ? sy : sx;
+  scale_bunny.makeScale(min, min, min);
+  scale_bunny.print("scaling matrix for bunny:");
+
+  // calculate scaling matrix for dragon
+  x = (dragon_xmax - dragon_xmin) / 2;
+  y = (dragon_ymax - dragon_ymin) / 2;
+  z = (dragon_zmax - dragon_zmin) / 2;
+
+  a = z / y;
+  ymax = 20 / (a + 1 / tan(30 * M_PI / 180));
+  xmax = ymax * (double)w / (double)h;
+  sy = ymax / y;
+  sx = xmax / x;
+  min = sy < sx ? sy : sx;
+  scale_dragon.makeScale(min, min, min);
+  scale_dragon.print("scaling matrix for dragon:");
 }
 
 //----------------------------------------------------------------------------
@@ -140,10 +185,10 @@ void Window::displayCallback()
 	  drawHouse(cam2);
 	  break;
   case F4:
-	  drawPointCloud(bunnyPos, bunnyNor, bunny_xmin, bunny_xmax, bunny_ymin, bunny_ymax, bunny_zmin, bunny_zmax);
+	  drawPointCloud(1);
 	  break;
   case F5:
-	  drawPointCloud(dragonPos, dragonNor, dragon_xmin, dragon_xmax, dragon_ymin, dragon_ymax, dragon_zmin, dragon_zmax);
+	  drawPointCloud(2);
 	  break;
   }
   
@@ -214,6 +259,7 @@ void Window::drawHouse(Camera &cam){
 	glMatrixMode(GL_MODELVIEW);
 	Matrix4d glmatrix = cam.getMatrix();
 	glLoadMatrixd(glmatrix.getPointer());
+	
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < 60; i++){
 		int index = indices[i] * 3;
@@ -227,12 +273,6 @@ void Window::drawHouse(Camera &cam){
 
 void Window::drawBall(){
 	glEnable(GL_LIGHTING);
-	/*
-	Matrix4d glmatrix;
-	glmatrix = Globals::ball.getMatrix();
-	if (Globals::ball.isReady())
-		Globals::ball.move();
-	*/
 	if (balls.empty()){
 		glFlush();
 		glutSwapBuffers();
@@ -253,31 +293,54 @@ void Window::drawBall(){
 	glutSwapBuffers();
 }
 
-void Window::drawPointCloud(vector<double> &position, vector<Vector3d> &normal, double &x_min, double &x_max, double &y_min, double &y_max, double &z_min, double &z_max){
+void Window::drawPointCloud(int which){
 	glEnable(GL_LIGHTING);
 	glMatrixMode(GL_MODELVIEW);
 	Matrix4d glmatrix;
-	Matrix4d scaling;
-	Matrix4d translation;
-	
-	double x = x_max - x_min;
-	double y = y_max - y_min;
-	double z = z_max - z_min;
-	double max = x > y ? (x > z ? x : z) : (y > z ? y : z);
-	max /= 1.7;
-	double r_max = 20 * sin(30 * M_PI / 180);
-	double s = r_max / max;
-	scaling.makeScale(s, s, s);
-	translation.makeTranslate(-(x_min + x_max) / 2, -(y_min + y_max) / 2, -(z_min + z_max) / 2);
-	glmatrix = scaling * translation;
-	glLoadMatrixd(glmatrix.getPointer());
-	glBegin(GL_POINTS);
-	for (int i = 0; i < normal.size(); i++)
-	{
-		glNormal3d(normal[i][0], normal[i][1], normal[i][2]);
-		glVertex3d(position[i*3], position[i*3+1], position[i*3+2]);
+	double zb = bunny_zmax - bunny_zmin;
+	double zd = dragon_zmax - dragon_zmin;
+	switch (which){
+	case 1:
+		glmatrix = scale_bunny * tran_bunny;
+		glLoadMatrixd(glmatrix.getPointer());
+		glBegin(GL_POINTS);
+		for (int i = 0; i < bunnyNor.size(); i++)
+		{
+			glNormal3d(bunnyNor[i][0], bunnyNor[i][1], bunnyNor[i][2]);
+			/*
+			double size = (bunnyPos[i * 3 + 2] - bunny_zmin + 0.005) / zb * particle_size;
+			
+			glVertex3d(bunnyPos[i * 3] - size, bunnyPos[i * 3 + 1] - size, bunnyPos[i * 3 + 2]);
+			glVertex3d(bunnyPos[i * 3] - size, bunnyPos[i * 3 + 1] + size, bunnyPos[i * 3 + 2]);
+			glVertex3d(bunnyPos[i * 3] + size, bunnyPos[i * 3 + 1] - size, bunnyPos[i * 3 + 2]);
+			glVertex3d(bunnyPos[i * 3] + size, bunnyPos[i * 3 + 1] + size, bunnyPos[i * 3 + 2]);
+			*/
+			glVertex3d(bunnyPos[i * 3], bunnyPos[i * 3 + 1], bunnyPos[i * 3 + 2]);
+		}
+		glEnd();
+		break;
+
+	case 2:
+		glmatrix = scale_dragon * tran_dragon;
+		glLoadMatrixd(glmatrix.getPointer());
+		glBegin(GL_POINTS);
+		for (int i = 0; i < dragonNor.size(); i++)
+		{
+			glNormal3d(dragonNor[i][0], dragonNor[i][1], dragonNor[i][2]);
+			/*
+			double size = (dragonPos[i * 3 + 2] - dragon_zmin + 0.005) / zd * particle_size;
+			glVertex3d(dragonPos[i * 3] - size, dragonPos[i * 3 + 1] - size, dragonPos[i * 3 + 2]);
+			glVertex3d(dragonPos[i * 3] - size, dragonPos[i * 3 + 1] + size, dragonPos[i * 3 + 2]);
+			glVertex3d(dragonPos[i * 3] + size, dragonPos[i * 3 + 1] - size, dragonPos[i * 3 + 2]);
+			glVertex3d(dragonPos[i * 3] + size, dragonPos[i * 3 + 1] + size, dragonPos[i * 3 + 2]);
+			*/
+			glVertex3d(dragonPos[i * 3], dragonPos[i * 3 + 1], dragonPos[i * 3 + 2]);
+		}
+		glEnd();
+		break;
+
 	}
-	glEnd();
+	
 
 	/* testing the method
 	double r_max = 20 * sin(30 * M_PI / 180);

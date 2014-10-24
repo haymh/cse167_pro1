@@ -13,10 +13,17 @@ protected:
 	Matrix4d m;
 
 	void computeMatrix();
+	void setCamera(double eyeX, double eyeY, double eyeZ,
+		double centerX, double centerY, double centerZ,
+		double upX, double upY, double upZ);
 
 public:
 	Camera(Vector3d e, Vector3d d, Vector3d up);
+	Camera(double eyeX, double eyeY, double eyeZ,
+		double centerX, double centerY, double centerZ,
+		double upX, double upY, double upZ);
 	Matrix4d getMatrix();
+	
 
 
 };
